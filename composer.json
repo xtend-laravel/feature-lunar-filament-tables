@@ -1,0 +1,19 @@
+{
+    "name": "xtend-laravel/feature-lunar-filament-tables",
+    "description": "Filament tables for Lunar",
+    "type": "xtend-feature",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "XtendLunar\\Features\\FilamentTables\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adam Lee",
+            "email": "adam@codelabx.ltd"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
