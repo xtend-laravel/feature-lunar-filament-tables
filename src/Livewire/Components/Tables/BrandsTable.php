@@ -29,7 +29,7 @@ class BrandsTable extends Component implements Tables\Contracts\HasTable
         return [
             Tables\Columns\ImageColumn::make('thumbnail')
                 ->getStateUsing(function (Brand $record) {
-                    return $record->thumbnail->getUrl('small');
+                    return $record->thumbnail?->getUrl('small');
                 })
                 ->size(120)
                 ->label('Image'),

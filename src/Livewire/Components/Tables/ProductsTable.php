@@ -76,6 +76,7 @@ class ProductsTable extends Component implements Tables\Contracts\HasTable
         return [
             Tables\Columns\ImageColumn::make('thumbnail')
                 ->getStateUsing(function (Product $record) {
+                    $record = Product::find($record->id);
                     if ($record->thumbnail) {
                         return $record->thumbnail->getUrl('small');
                     }
@@ -207,8 +208,7 @@ class ProductsTable extends Component implements Tables\Contracts\HasTable
                      Grid::make()
                          ->schema([
                              Select::make('primary_category')->options(
-                                 \Lunar\Models\Collection::where('type', 'category')
-                                     ->get()
+                                 \Lunar\Models\Collection::all()
                                      ->filter(fn ($primaryCategory) => Product::where('primary_category_id', $primaryCategory->id)->exists())
                                      ->mapWithKeys(fn ($collection) => [$collection->id => $collection->translateAttribute('name')])
                              ),
