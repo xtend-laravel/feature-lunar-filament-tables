@@ -111,6 +111,11 @@ class ProductsTable extends Component implements Tables\Contracts\HasTable
         ];
     }
 
+    protected function getTableRecordUrlUsing(): ?\Closure
+    {
+        return fn (Product $record): string => route('hub.products.show', ['product' => $record]);
+    }
+
     /**
      * Return a column for status.
      *
