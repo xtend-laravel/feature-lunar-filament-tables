@@ -46,7 +46,10 @@ class ProductVariantsTable extends Table
                     return null;
                 }
 
-                return $thumbnail->getUrl('small');
+                return $record->images->first(function ($image) use ($record) {
+                    return $image->pivot->product_variant_id === $record->id;
+                })?->getFullUrl('small') ?? $thumbnail->getFullUrl('small');
+
             })->heading(false),
             TextColumn::make('sku')->url(function ($record) {
                 return route('hub.products.variants.show', [
