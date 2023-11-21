@@ -106,7 +106,7 @@ class ProductsTable extends Component implements Tables\Contracts\HasTable
                       ->label('SKU')
                       ->getStateUsing(fn (Product $record): string => $record?->baseVariant?->sku ?? '--'),
             TextColumn::make('quantity')
-                      ->getStateUsing(fn (Product $record): string => $record?->variants?->sum('unit_quantity') ?? '--'),
+                      ->getStateUsing(fn (Product $record): string => $record?->stock ?? '--'),
             $this->statusColumn(),
         ];
     }
