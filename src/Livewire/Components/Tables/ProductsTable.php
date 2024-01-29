@@ -212,19 +212,27 @@ class ProductsTable extends Component implements Tables\Contracts\HasTable
                  ->form([
                      Grid::make()
                          ->schema([
-                             Select::make('primary_category')->options(
-                                 \Lunar\Models\Collection::all()
-                                     ->filter(fn ($primaryCategory) => Product::where('primary_category_id', $primaryCategory->id)->exists())
-                                     ->mapWithKeys(fn ($collection) => [$collection->id => $collection->translateAttribute('name')])
+                             Select::make('style')
+                                    ->options(
+                                        \Lunar\Models\Collection::all()
+                                            ->filter(fn ($primaryCategory) => Product::where('primary_category_id', $primaryCategory->id)->exists())
+                                            ->mapWithKeys(fn ($collection) => [$collection->id => $collection->translateAttribute('name')])
                              ),
-                             Select::make('brand')->relationship('brand', 'name')->options(Brand::all()->pluck('name', 'id')),
+                             Select::make('category')
+                                    ->options(
+                                        \Lunar\Models\Collection::all()
+                                            ->filter(function (\Lunar\Models\Collection $primaryCategory) {
+                                                return $primaryCategory->group->id === 1;
+                                            })->mapWithKeys(fn ($collection) => [$collection->id => $collection->translateAttribute('name')])
+                                    ),
                              $this->statusFilter(),
                              //$this->trashedFilter(),
                          ])->columns(3),
                  ])
                 ->query(function (Builder $query, array $data): Builder {
                     return $query
-                        ->when($data['primary_category'] ?? null, fn (Builder $query, $primaryCategory) => $query->where('primary_category_id', $primaryCategory))
+                        ->when($data['style'] ?? null, fn (Builder $query, $primaryCategory) => $query->where('primary_category_id', $primaryCategory))
+                        ->when($data['category'] ?? null, fn (Builder $query, $primaryCategory) => $query->whereHas('collections', fn (Builder $query) => $query->where('collection_id', $primaryCategory)))
                         ->when($data['brand'] ?? null, fn (Builder $query, $brand) => $query->where('brand_id', $brand))
                         ->when($data['status'] ?? null, fn (Builder $query, $status) => $query->where('status', $status));
                     //->when($data['trashed'] ?? null, fn (Builder $query, $trashed) => $trashed ? $query->onlyTrashed() : $query->withoutTrashed());
